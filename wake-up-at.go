@@ -12,6 +12,9 @@ import (
 const MORNING string = "AM"
 
 
+const MIDDAY int = 12
+
+
 // Returns true if the period of the day is Morning. Otherwise, false
 func isMorning (period string) bool { return period == MORNING }
 
@@ -31,7 +34,7 @@ func main () {
 
     if isMorning(period) {
 
-        if now.Hour() > 12 {
+        if now.Hour() > MIDDAY {
 
             wake_time = wake_time.AddDate(0, 0, 1)
         }
