@@ -9,9 +9,17 @@ import (
 )
 
 
+const MORNING string = "AM"
+
+
+// Returns true if the period of the day is Morning. Otherwise, false
+func isMorning (period string) bool { return period == MORNING }
+
+
 func main () {
 
     now := time.Now()
+
 
     // Fake input data
     period := "AM"
@@ -20,7 +28,8 @@ func main () {
 
 
     wake_time := now
-    if period == "AM" {
+
+    if isMorning(period) {
 
         if now.Hour() > 12 {
 
