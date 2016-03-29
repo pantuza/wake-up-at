@@ -6,6 +6,7 @@ package main
 import (
     "fmt"
     "time"
+    "os"
 )
 
 
@@ -23,6 +24,7 @@ func main () {
 
     now := time.Now()
 
+    fmt.Printf("Arguments: %s\n", os.Args)
 
     // Fake input data
     period := "AM"
