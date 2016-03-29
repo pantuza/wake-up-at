@@ -16,6 +16,7 @@ run:
 	@go run $(MAIN_FILE)
 
 test:
+	@clear
 	@go test ./... -v
 
 clean:
