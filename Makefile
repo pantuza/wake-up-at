@@ -16,7 +16,7 @@ run:
 	@go run $(MAIN_FILE)
 
 test:
-	@go test ./...
+	@go test ./... -v
 
 clean:
 	@rm -rvf wake-up-at
