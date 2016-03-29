@@ -12,6 +12,7 @@ build:
 	@go build
 
 run:
+	@clear
 	@go run $(MAIN_FILE)
 
 test:
