@@ -6,7 +6,7 @@ package main
 import (
     "fmt"
     "time"
-    "os"
+    "flag"
 )
 
 
@@ -14,6 +14,17 @@ const MORNING string = "AM"
 
 
 const MIDDAY int = 12
+
+
+// Parses the command line options
+func parseOptions(hours, minutes *int, period *string) {
+
+    hours = flag.Int("h", 8, "Hour to wake up")
+    minutes = flag.Int("m", 0, "Minute to wake up in the given hour")
+    period = flag.String("p", "am", "Period of the day: am/pm")
+    fmt.Printf("Hours", *hours)
+    flag.Parse()
+}
 
 
 // Returns true if the period of the day is Morning. Otherwise, false
@@ -24,12 +35,14 @@ func main () {
 
     now := time.Now()
 
-    fmt.Printf("Arguments: %s\n", os.Args)
+    // Variables for wake time calculation
+    var period string
+    var hours int
+    var minutes int
 
-    // Fake input data
-    period := "AM"
-    hours := 8
-    minutes := 15
+
+    // Parses command line options
+    parseOptions(&hours, &minutes, &period)
 
 
     wake_time := now
