@@ -40,7 +40,7 @@ func TestHourInputOption(t *testing.T) {
 
     defer ResetCommandLineFlags()
 
-    os.Args = []string{"cmd", "-m", "10"}
+    os.Args = []string{"cmd", "-h", "10"}
 
     var hours int
     var minutes int
@@ -48,7 +48,82 @@ func TestHourInputOption(t *testing.T) {
 
     parseOptions(&hours, &minutes, &period)
 
-    if minutes != 10 {
-        t.Fatal("wake up minutes must be 10, got ", minutes)
+    if hours != 10 {
+        t.Fatal("wake up hour must be 10, got ", hours)
+    }
+}
+
+
+func TestMinuteInputOption(t *testing.T) {
+
+    defer ResetCommandLineFlags()
+
+    os.Args = []string{"cmd", "-m", "15"}
+
+    var hours int
+    var minutes int
+    var period string
+
+    parseOptions(&hours, &minutes, &period)
+
+    if minutes != 15 {
+        t.Fatal("wake up minutes must be 15, got ", minutes)
+    }
+}
+
+
+func TestPeriodInputOption(t *testing.T) {
+
+    defer ResetCommandLineFlags()
+
+    os.Args = []string{"cmd", "-p", "pm"}
+
+    var hours int
+    var minutes int
+    var period string
+
+    parseOptions(&hours, &minutes, &period)
+
+    if period != "PM" {
+        t.Fatal("wake up period must be PM, got ", period)
+    }
+}
+
+
+func TestWrongPeriodInputOption(t *testing.T) {
+
+    defer ResetCommandLineFlags()
+
+    os.Args = []string{"cmd", "-p", "wrong"}
+
+    var hours int
+    var minutes int
+    var period string
+
+    parseOptions(&hours, &minutes, &period)
+
+    if period != "AM" {
+        t.Fatal("wake up period must be PM, got ", period)
+    }
+}
+
+
+func TestUsageFunctionCallWhenThereIsAnInvalidOption(t *testing.T) {
+
+    defer ResetCommandLineFlags()
+
+    os.Args = []string{"cmd", "-wrong"}
+
+    var hours int
+    var minutes int
+    var period string
+
+    var called bool = false
+    flag.Usage = func () { called = true }
+
+    parseOptions(&hours, &minutes, &period)
+
+    if !called {
+        t.Fatal("Usage function not called")
     }
 }
