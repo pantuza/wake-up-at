@@ -15,7 +15,11 @@ func TestDefaultCommandlineOptionsValues(t *testing.T) {
 
     parseOptions(&hours, &minutes, &period)
 
-    if !(hours == 8) {
+    if hours != 8 {
         t.Fatal("Default hour must be 8, got ", hours)
+    } else if minutes != 0 {
+        t.Fatal("Default minute must be 0, got ", minutes)
+    } else if period != "AM" {
+        t.Fatal("Default period must be AM, got ", period)
     }
 }
