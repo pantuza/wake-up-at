@@ -12,6 +12,7 @@ import (
 
 
 const MORNING string = "AM"
+const EVENING string = "PM"
 
 
 const MIDDAY int = 12
@@ -29,6 +30,10 @@ func parseOptions(hours, minutes *int, period *string) {
     *hours = *flagHours
     *minutes = *flagMinutes
     *period = strings.ToUpper(*flagPeriod)
+
+    if *period != MORNING && *period != EVENING {
+        *period = MORNING
+    }
 }
 
 
