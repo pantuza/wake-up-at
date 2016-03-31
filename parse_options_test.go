@@ -9,7 +9,16 @@ import (
 )
 
 
+// Reset CommandLine for each test from flags parsing
+func ResetCommandLineFlags() {
+
+    flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
+}
+
+
 func TestDefaultCommandlineOptionsValues(t *testing.T) {
+
+    defer ResetCommandLineFlags()
 
     var hours int
     var minutes int
@@ -29,7 +38,8 @@ func TestDefaultCommandlineOptionsValues(t *testing.T) {
 
 func TestHourInputOption(t *testing.T) {
 
-    flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
+    defer ResetCommandLineFlags()
+
     os.Args = []string{"cmd", "-m", "10"}
 
     var hours int
