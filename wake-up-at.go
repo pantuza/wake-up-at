@@ -7,6 +7,7 @@ import (
     "fmt"
     "time"
     "flag"
+    "strings"
 )
 
 
@@ -19,11 +20,15 @@ const MIDDAY int = 12
 // Parses the command line options
 func parseOptions(hours, minutes *int, period *string) {
 
-    hours = flag.Int("h", 8, "Hour to wake up")
-    minutes = flag.Int("m", 0, "Minute to wake up in the given hour")
-    period = flag.String("p", "am", "Period of the day: am/pm")
-    fmt.Printf("Hours", *hours)
+    flagHours := flag.Int("h", 8, "Hour to wake up")
+    flagMinutes := flag.Int("m", 0, "Minute to wake up in the given hour")
+    flagPeriod := flag.String("p", "am", "Period of the day: am/pm")
+
     flag.Parse()
+
+    *hours = *flagHours
+    *minutes = *flagMinutes
+    *period = strings.ToUpper(*flagPeriod)
 }
 
 
