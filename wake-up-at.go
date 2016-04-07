@@ -67,14 +67,14 @@ func main () {
             wake_time.Day(), hours, minutes, 0, 0, wake_time.Location())
     }
 
-    firstTime := wake_time.Add(-360 * time.Minute)
-    secondTime := wake_time.Add(-270 * time.Minute)
-    thirdTime := wake_time.Add(-180 * time.Minute)
-    fourthTime := wake_time.Add(-90 * time.Minute)
+    first_time := wake_time.Add(-360 * time.Minute)
+    second_time := wake_time.Add(-270 * time.Minute)
+    third_time := wake_time.Add(-180 * time.Minute)
+    fourth_time := wake_time.Add(-90 * time.Minute)
 
     fmt.Printf("To wake up at %v:\n", wake_time)
-    fmt.Printf("You should sleep at: %v\n\n", firstTime)
-    fmt.Printf("Or yet, you could sleep at: %v\n", secondTime)
-    fmt.Printf("Also at: %v\n", thirdTime)
-    fmt.Printf("Or at: %v\n", fourthTime)
+    fmt.Printf("You should sleep at: %v\n\n", first_time)
+    fmt.Printf("Or yet, you could sleep at: %v\n", second_time)
+    fmt.Printf("Also at: %v\n", third_time)
+    fmt.Printf("Or at: %v\n", fourth_time)
 }
