@@ -72,6 +72,7 @@ func main () {
     thirdTime := wake_time.Add(-180 * time.Minute)
     fourthTime := wake_time.Add(-90 * time.Minute)
 
+    fmt.Printf("To wake up at %v:\n", wake_time)
     fmt.Printf("You should sleep at: %v\n\n", firstTime)
     fmt.Printf("Or yet, you could sleep at: %v\n", secondTime)
     fmt.Printf("Also at: %v\n", thirdTime)
