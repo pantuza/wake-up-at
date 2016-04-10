@@ -42,6 +42,17 @@ func parseOptions(hours, minutes *int, period *string) {
 func isMorning (period string) bool { return period == MORNING }
 
 
+// Calculates the possibles times to go to sleep
+func calcTimes(wake_time, first_time, second_time,
+               third_time, fourth_time *time.Time) {
+
+    *first_time = wake_time.Add(-540 * time.Minute)
+    *second_time = wake_time.Add(-450 * time.Minute)
+    *third_time = wake_time.Add(-360 * time.Minute)
+    *fourth_time = wake_time.Add(-270 * time.Minute)
+}
+
+
 // Formats the output message and print
 func formatAndPrint(wake_time, first_time, second_time,
                     third_time, fourth_time *time.Time) {
@@ -59,8 +70,7 @@ func main () {
 
     // Variables for wake time calculation
     var period string
-    var hours int
-    var minutes int
+    var hours, minutes int
 
 
     // Parses command line options
@@ -79,11 +89,11 @@ func main () {
             wake_time.Day(), hours, minutes, 0, 0, wake_time.Location())
     }
 
-    first_time := wake_time.Add(-540 * time.Minute)
-    second_time := wake_time.Add(-450 * time.Minute)
-    third_time := wake_time.Add(-360 * time.Minute)
-    fourth_time := wake_time.Add(-270 * time.Minute)
+    // Calculate possible times
+    var first_time, second_time, third_time, fourth_time time.Time
+    calcTimes(&wake_time, &first_time, &second_time, &third_time, &fourth_time)
 
+    // Prints times to go sleep
     formatAndPrint(&wake_time, &first_time, &second_time,
                    &third_time, &fourth_time)
 }
