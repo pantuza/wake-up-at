@@ -16,6 +16,7 @@ const EVENING string = "PM"
 
 
 const MIDDAY int = 12
+const TIME_FORMAT = "3:04 PM"
 
 
 // Parses the command line options
@@ -39,6 +40,17 @@ func parseOptions(hours, minutes *int, period *string) {
 
 // Returns true if the period of the day is Morning. Otherwise, false
 func isMorning (period string) bool { return period == MORNING }
+
+
+// Formats the output message and print
+func formatAndPrint(wake_time, first_time, second_time,
+                    third_time, fourth_time *time.Time) {
+
+    fmt.Printf("To wake up at %v, ", wake_time.Format(TIME_FORMAT))
+    fmt.Printf("you should sleep at: %v\n\n", first_time.Format(TIME_FORMAT))
+    fmt.Printf("Also at: %v | %v | %v\n", second_time.Format(TIME_FORMAT),
+               third_time.Format(TIME_FORMAT), fourth_time.Format(TIME_FORMAT))
+}
 
 
 func main () {
@@ -72,11 +84,6 @@ func main () {
     third_time := wake_time.Add(-360 * time.Minute)
     fourth_time := wake_time.Add(-270 * time.Minute)
 
-
-    times_fmt := "3:04 PM"
-    fmt.Printf("To wake up at %v:\n", wake_time.Format(times_fmt))
-    fmt.Printf("You should sleep at: %v\n\n", first_time.Format(times_fmt))
-    fmt.Printf("Or yet, you could sleep at: %v\n", second_time.Format(times_fmt))
-    fmt.Printf("Also at: %v\n", third_time.Format(times_fmt))
-    fmt.Printf("Or at: %v\n", fourth_time.Format(times_fmt))
+    formatAndPrint(&wake_time, &first_time, &second_time,
+                   &third_time, &fourth_time)
 }
