@@ -81,13 +81,24 @@ func main () {
 
     if isMorning(period) {
 
+        // Increment wake up day to tomorrow
         if now.Hour() > MIDDAY {
             wake_time = wake_time.AddDate(0, 0, 1)
         }
 
-        wake_time = time.Date(wake_time.Year(), wake_time.Month(),
-            wake_time.Day(), hours, minutes, 0, 0, wake_time.Location())
+    // If wake up period is PM
+    } else {
+
+        // Normalize location that uses hours like 22 instead of 10 PM.
+        if hours <= MIDDAY {
+            // then we increment it by 12 hours
+            hours += MIDDAY
+        }
     }
+
+    // Update the wake time with correct values of hours and period
+    wake_time = time.Date(wake_time.Year(), wake_time.Month(),
+        wake_time.Day(), hours, minutes, 0, 0, wake_time.Location())
 
     // Calculate possible times
     var first_time, second_time, third_time, fourth_time time.Time
