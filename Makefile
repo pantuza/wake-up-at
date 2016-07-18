@@ -6,6 +6,10 @@
 
 MAIN_FILE := wake-up-at.go
 
+BINDIR := /usr/local/bin
+bindir := $(BINDIR) # Makefile compatibility with generic bindir variable
+BINFILE := wake-up-at
+
 
 build:
 	@echo "Building project"
@@ -21,3 +25,11 @@ test:
 
 clean:
 	@rm -rvf wake-up-at
+
+install: $(BINFILE)
+	@echo "Installing project"
+	@install -v $(BINFILE) $(BINDIR)/$(BINFILE)
+
+uninstall: $(BINDIR)/$(BINFILE)
+	@echo "Uninstalling project"
+	@rm -vf $+
