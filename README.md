@@ -1,6 +1,19 @@
 # Wake up at
 Command line tool that helps you know what is the best time to go to sleep based on the time you want to wake up.
 
+# Description
+
+Human sleep occurs in periods of approximately 90 minutes.
+One of the cycles is known as *deep sleep*.
+if you wake up in the middle of this cycle, probably you will feel a little desoriented and slow.
+For that, this program calculates the best times to you to go to sleep based in the time you want to wake up trying to avoid the deep sleep cycle.
+
+Imagine you are programming at 1 *am* and you just realized that you should go to sleep because you must wake up
+7:15 at morning.
+If you go to sleep right now, it is possible to you wake up unwell and slow if you wake during your deep sleep.
+To solve that, you just have to type in your terminal `wake-up-at -h 7 -m 15` and the program calculates the best
+times from now on that you should sleep.
+
 # How to use
 
 ```bash
