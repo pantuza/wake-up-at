@@ -13,6 +13,13 @@ const evening string = "PM"
 const midday int = 12
 const timeFormat = "3:04 PM"
 
+type Times struct {
+	firstTime  time.Time
+	secondTime time.Time
+	thirdTime  time.Time
+	fourthTime time.Time
+}
+
 // Parses the command line options
 func parseOptions(hours, minutes *int, period *string) {
 
@@ -35,23 +42,21 @@ func parseOptions(hours, minutes *int, period *string) {
 func isMorning(period string) bool { return period == morning }
 
 // Calculates the possibles times to go to sleep
-func calcTimes(wakeTime, firstTime, secondTime,
-	thirdTime, fourthTime *time.Time) {
+func (t *Times) calcTimes(wakeTime *time.Time) {
 
-	*firstTime = wakeTime.Add(-540 * time.Minute)
-	*secondTime = wakeTime.Add(-450 * time.Minute)
-	*thirdTime = wakeTime.Add(-360 * time.Minute)
-	*fourthTime = wakeTime.Add(-270 * time.Minute)
+	t.firstTime = wakeTime.Add(-540 * time.Minute)
+	t.secondTime = wakeTime.Add(-450 * time.Minute)
+	t.thirdTime = wakeTime.Add(-360 * time.Minute)
+	t.fourthTime = wakeTime.Add(-270 * time.Minute)
 }
 
 // Formats the output message and print
-func formatAndPrint(wakeTime, firstTime, secondTime,
-	thirdTime, fourthTime *time.Time) {
+func (t *Times) formatAndPrint(wakeTime *time.Time) {
 
 	fmt.Printf("To wake up at %v, ", wakeTime.Format(timeFormat))
-	fmt.Printf("you should sleep at: %v\n\n", firstTime.Format(timeFormat))
-	fmt.Printf("Also at: %v | %v | %v\n", secondTime.Format(timeFormat),
-		thirdTime.Format(timeFormat), fourthTime.Format(timeFormat))
+	fmt.Printf("you should sleep at: %v\n\n", t.firstTime.Format(timeFormat))
+	fmt.Printf("Also at: %v | %v | %v\n", t.secondTime.Format(timeFormat),
+		t.thirdTime.Format(timeFormat), t.fourthTime.Format(timeFormat))
 }
 
 func main() {
@@ -89,10 +94,9 @@ func main() {
 		wakeTime.Day(), hours, minutes, 0, 0, wakeTime.Location())
 
 	// Calculate possible times
-	var firstTime, secondTime, thirdTime, fourthTime time.Time
-	calcTimes(&wakeTime, &firstTime, &secondTime, &thirdTime, &fourthTime)
+	var time Times
+	time.calcTimes(&wakeTime)
 
 	// Prints times to go sleep
-	formatAndPrint(&wakeTime, &firstTime, &secondTime,
-		&thirdTime, &fourthTime)
+	time.formatAndPrint(&wakeTime)
 }
