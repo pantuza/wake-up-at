@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"strings"
@@ -13,16 +14,23 @@ const evening string = "PM"
 const midday int = 12
 const timeFormat = "3:04 PM"
 
-type Times struct {
-	firstTime  time.Time
-	secondTime time.Time
-	thirdTime  time.Time
-	fourthTime time.Time
+type sleepTimes struct {
+	sleepAt []time.Time
+}
+
+func newSleepTimes(count int) *sleepTimes {
+	st := sleepTimes{
+		sleepAt: []time.Time{},
+	}
+
+	for i := 0; i < count; i++ {
+		st.sleepAt = append(st.sleepAt, time.Time{})
+	}
+	return &st
 }
 
 // Parses the command line options
 func parseOptions(hours, minutes *int, period *string) {
-
 	flagHours := flag.Int("h", 8, "Hour to wake up")
 	flagMinutes := flag.Int("m", 0, "Minute to wake up in the given hour")
 	flagPeriod := flag.String("p", "am", "Period of the day: am/pm")
@@ -42,49 +50,54 @@ func parseOptions(hours, minutes *int, period *string) {
 func isMorning(period string) bool { return period == morning }
 
 // Calculates the possibles times to go to sleep
-func (t *Times) calcTimes(wakeTime *time.Time) {
+func (st *sleepTimes) calcTimes(wakeTime time.Time) {
+	offset := -540
 
-	t.firstTime = wakeTime.Add(-540 * time.Minute)
-	t.secondTime = wakeTime.Add(-450 * time.Minute)
-	t.thirdTime = wakeTime.Add(-360 * time.Minute)
-	t.fourthTime = wakeTime.Add(-270 * time.Minute)
+	for i := range st.sleepAt {
+		st.sleepAt[i] = wakeTime.Add(time.Duration(offset) * time.Minute)
+		offset += 90
+	}
 }
 
 // Formats the output message and print
-func (t *Times) formatAndPrint(wakeTime *time.Time) {
+func (st *sleepTimes) format(wakeTime time.Time) string {
+	output := bytes.Buffer{}
+	output.WriteString(fmt.Sprintf("To wake up at %v, ",
+		wakeTime.Format(timeFormat)))
 
-	fmt.Printf("To wake up at %v, ", wakeTime.Format(timeFormat))
-	fmt.Printf("you should sleep at: %v\n\n", t.firstTime.Format(timeFormat))
-	fmt.Printf("Also at: %v | %v | %v\n", t.secondTime.Format(timeFormat),
-		t.thirdTime.Format(timeFormat), t.fourthTime.Format(timeFormat))
+	for i := range st.sleepAt {
+		if i == 0 {
+			output.WriteString(fmt.Sprintf("you should sleep at: %v\n\n",
+				st.sleepAt[i].Format(timeFormat)))
+		} else if i == 1 {
+			output.WriteString(fmt.Sprintf("Also at: %v",
+				st.sleepAt[i].Format(timeFormat)))
+		} else {
+			output.WriteString(fmt.Sprintf(" | %v",
+				st.sleepAt[i].Format(timeFormat)))
+		}
+	}
+
+	return output.String()
 }
 
 func main() {
-
-	now := time.Now()
-
-	// Variables for wake time calculation
-	var period string
 	var hours, minutes int
+	var period string
+	wakeTime := time.Now()
+	st := newSleepTimes(4)
 
 	// Parses command line options
 	parseOptions(&hours, &minutes, &period)
 
-	wakeTime := now
-
+	// If morning period, increment wake up day to tomorrow, else normalize
+	// location that uses hours like 22 instead of 10pm
 	if isMorning(period) {
-
-		// Increment wake up day to tomorrow
-		if now.Hour() > midday {
-			wakeTime = wakeTime.AddDate(0, 0, 1)
+		if wakeTime.Hour() > midday {
+			wakeTime.AddDate(0, 0, 1)
 		}
-
-		// If wake up period is PM
 	} else {
-
-		// Normalize location that uses hours like 22 instead of 10 PM.
 		if hours <= midday {
-			// then we increment it by 12 hours
 			hours += midday
 		}
 	}
@@ -94,9 +107,9 @@ func main() {
 		wakeTime.Day(), hours, minutes, 0, 0, wakeTime.Location())
 
 	// Calculate possible times
-	var time Times
-	time.calcTimes(&wakeTime)
+	st.calcTimes(wakeTime)
 
 	// Prints times to go sleep
-	time.formatAndPrint(&wakeTime)
+	output := st.format(wakeTime)
+	fmt.Println(output)
 }
