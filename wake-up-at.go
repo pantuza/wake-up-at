@@ -78,7 +78,6 @@ func (st *sleepTimes) format(wakeTime time.Time) string {
 		}
 	}
 
-	output.WriteString("\n")
 	return output.String()
 }
 

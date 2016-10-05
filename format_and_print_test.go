@@ -10,7 +10,7 @@ func TestFormat(t *testing.T) {
 	baseTime := time.Date(2016, time.April, 10, 8, 0, 0, 0, time.Local)
 	expOut := bytes.Buffer{}
 	expOut.WriteString("To wake up at 8:00 AM, you should sleep at: 11:00 PM\n\n")
-	expOut.WriteString("Also at: 12:30 AM | 2:00 AM | 3:30 AM\n")
+	expOut.WriteString("Also at: 12:30 AM | 2:00 AM | 3:30 AM")
 
 	st := sleepTimes{
 		sleepAt: []time.Time{
