@@ -1,28 +1,24 @@
-
 package main
 
-
 import (
-
-    "testing"
-    "time"
+	"testing"
+	"time"
 )
-
 
 func TestCalcTimes(t *testing.T) {
 
-    base_time := time.Date(2016, time.April, 10, 8, 0, 0, 0, time.Local)
+	baseTime := time.Date(2016, time.April, 10, 8, 0, 0, 0, time.Local)
 
-    var first_time, second_time, third_time, fourth_time time.Time
-    calcTimes(&base_time, &first_time, &second_time, &third_time, &fourth_time)
+	var firstTime, secondTime, thirdTime, fourthTime time.Time
+	calcTimes(&baseTime, &firstTime, &secondTime, &thirdTime, &fourthTime)
 
-    if first_time.Hour() != 23 {
-        t.Fatal("First time shoulb be 23, got %d", first_time.Hour())
-    } else if second_time.Hour() != 00 {
-        t.Fatal("Second time shoulb be 00, got %d", second_time.Hour())
-    } else if third_time.Hour() != 2 {
-        t.Fatal("Third time shoulb be 2, got %d", third_time.Hour())
-    } else if fourth_time.Hour() != 3 {
-        t.Fatal("Fourth time shoulb be 3, got %d", fourth_time.Hour())
-    }
+	if firstTime.Hour() != 23 {
+		t.Fatalf("First time shoulb be 23, got %d", firstTime.Hour())
+	} else if secondTime.Hour() != 00 {
+		t.Fatalf("Second time shoulb be 00, got %d", secondTime.Hour())
+	} else if thirdTime.Hour() != 2 {
+		t.Fatalf("Third time shoulb be 2, got %d", thirdTime.Hour())
+	} else if fourthTime.Hour() != 3 {
+		t.Fatalf("Fourth time shoulb be 3, got %d", fourthTime.Hour())
+	}
 }

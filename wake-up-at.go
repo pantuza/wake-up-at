@@ -1,110 +1,98 @@
-
-
 package main
 
-
 import (
-    "fmt"
-    "time"
-    "flag"
-    "strings"
+	"flag"
+	"fmt"
+	"strings"
+	"time"
 )
 
+const morning string = "AM"
+const evening string = "PM"
 
-const MORNING string = "AM"
-const EVENING string = "PM"
-
-
-const MIDDAY int = 12
-const TIME_FORMAT = "3:04 PM"
-
+const midday int = 12
+const timeFormat = "3:04 PM"
 
 // Parses the command line options
 func parseOptions(hours, minutes *int, period *string) {
 
-    flagHours := flag.Int("h", 8, "Hour to wake up")
-    flagMinutes := flag.Int("m", 0, "Minute to wake up in the given hour")
-    flagPeriod := flag.String("p", "am", "Period of the day: am/pm")
+	flagHours := flag.Int("h", 8, "Hour to wake up")
+	flagMinutes := flag.Int("m", 0, "Minute to wake up in the given hour")
+	flagPeriod := flag.String("p", "am", "Period of the day: am/pm")
 
-    flag.Parse()
+	flag.Parse()
 
-    *hours = *flagHours
-    *minutes = *flagMinutes
-    *period = strings.ToUpper(*flagPeriod)
+	*hours = *flagHours
+	*minutes = *flagMinutes
+	*period = strings.ToUpper(*flagPeriod)
 
-    if *period != MORNING && *period != EVENING {
-        *period = MORNING
-    }
+	if *period != morning && *period != evening {
+		*period = morning
+	}
 }
-
 
 // Returns true if the period of the day is Morning. Otherwise, false
-func isMorning (period string) bool { return period == MORNING }
-
+func isMorning(period string) bool { return period == morning }
 
 // Calculates the possibles times to go to sleep
-func calcTimes(wake_time, first_time, second_time,
-               third_time, fourth_time *time.Time) {
+func calcTimes(wakeTime, firstTime, secondTime,
+	thirdTime, fourthTime *time.Time) {
 
-    *first_time = wake_time.Add(-540 * time.Minute)
-    *second_time = wake_time.Add(-450 * time.Minute)
-    *third_time = wake_time.Add(-360 * time.Minute)
-    *fourth_time = wake_time.Add(-270 * time.Minute)
+	*firstTime = wakeTime.Add(-540 * time.Minute)
+	*secondTime = wakeTime.Add(-450 * time.Minute)
+	*thirdTime = wakeTime.Add(-360 * time.Minute)
+	*fourthTime = wakeTime.Add(-270 * time.Minute)
 }
-
 
 // Formats the output message and print
-func formatAndPrint(wake_time, first_time, second_time,
-                    third_time, fourth_time *time.Time) {
+func formatAndPrint(wakeTime, firstTime, secondTime,
+	thirdTime, fourthTime *time.Time) {
 
-    fmt.Printf("To wake up at %v, ", wake_time.Format(TIME_FORMAT))
-    fmt.Printf("you should sleep at: %v\n\n", first_time.Format(TIME_FORMAT))
-    fmt.Printf("Also at: %v | %v | %v\n", second_time.Format(TIME_FORMAT),
-               third_time.Format(TIME_FORMAT), fourth_time.Format(TIME_FORMAT))
+	fmt.Printf("To wake up at %v, ", wakeTime.Format(timeFormat))
+	fmt.Printf("you should sleep at: %v\n\n", firstTime.Format(timeFormat))
+	fmt.Printf("Also at: %v | %v | %v\n", secondTime.Format(timeFormat),
+		thirdTime.Format(timeFormat), fourthTime.Format(timeFormat))
 }
 
+func main() {
 
-func main () {
+	now := time.Now()
 
-    now := time.Now()
+	// Variables for wake time calculation
+	var period string
+	var hours, minutes int
 
-    // Variables for wake time calculation
-    var period string
-    var hours, minutes int
+	// Parses command line options
+	parseOptions(&hours, &minutes, &period)
 
+	wakeTime := now
 
-    // Parses command line options
-    parseOptions(&hours, &minutes, &period)
+	if isMorning(period) {
 
+		// Increment wake up day to tomorrow
+		if now.Hour() > midday {
+			wakeTime = wakeTime.AddDate(0, 0, 1)
+		}
 
-    wake_time := now
+		// If wake up period is PM
+	} else {
 
-    if isMorning(period) {
+		// Normalize location that uses hours like 22 instead of 10 PM.
+		if hours <= midday {
+			// then we increment it by 12 hours
+			hours += midday
+		}
+	}
 
-        // Increment wake up day to tomorrow
-        if now.Hour() > MIDDAY {
-            wake_time = wake_time.AddDate(0, 0, 1)
-        }
+	// Update the wake time with correct values of hours and period
+	wakeTime = time.Date(wakeTime.Year(), wakeTime.Month(),
+		wakeTime.Day(), hours, minutes, 0, 0, wakeTime.Location())
 
-    // If wake up period is PM
-    } else {
+	// Calculate possible times
+	var firstTime, secondTime, thirdTime, fourthTime time.Time
+	calcTimes(&wakeTime, &firstTime, &secondTime, &thirdTime, &fourthTime)
 
-        // Normalize location that uses hours like 22 instead of 10 PM.
-        if hours <= MIDDAY {
-            // then we increment it by 12 hours
-            hours += MIDDAY
-        }
-    }
-
-    // Update the wake time with correct values of hours and period
-    wake_time = time.Date(wake_time.Year(), wake_time.Month(),
-        wake_time.Day(), hours, minutes, 0, 0, wake_time.Location())
-
-    // Calculate possible times
-    var first_time, second_time, third_time, fourth_time time.Time
-    calcTimes(&wake_time, &first_time, &second_time, &third_time, &fourth_time)
-
-    // Prints times to go sleep
-    formatAndPrint(&wake_time, &first_time, &second_time,
-                   &third_time, &fourth_time)
+	// Prints times to go sleep
+	formatAndPrint(&wakeTime, &firstTime, &secondTime,
+		&thirdTime, &fourthTime)
 }
