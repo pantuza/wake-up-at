@@ -23,6 +23,9 @@ test:
 	@clear
 	@go test ./... -v
 
+format:
+	@go fmt .
+
 clean:
 	@rm -rvf wake-up-at
 
